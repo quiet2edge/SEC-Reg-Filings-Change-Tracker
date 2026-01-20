@@ -6,41 +6,19 @@
     "watchlist": {
       "title": "Company Watchlist",
       "type": "array",
-      "description": "Companies to monitor. Supports CIK, ticker symbol, or company name.",
+      "description": "Companies to monitor. Enter ticker symbols (AAPL), CIK numbers (0000320193), or company names (Apple Inc).",
       "editor": "stringList",
-      "prefill": [
-        "AAPL",
-        "MSFT",
-        "GOOGL"
-      ],
-      "example": [
-        "AAPL",
-        "0000320193",
-        "Tesla Inc"
-      ]
+      "prefill": ["AAPL", "MSFT", "GOOGL"],
+      "minItems": 1
     },
     "filingTypes": {
       "title": "Filing Types",
       "type": "array",
       "description": "Which SEC filing types to monitor",
-      "editor": "select",
+      "editor": "stringList",
       "default": ["10-K", "10-Q", "8-K"],
       "prefill": ["10-K", "10-Q", "8-K"],
-      "enum": [
-        "10-K",
-        "10-Q",
-        "8-K",
-        "13F",
-        "4",
-        "DEF 14A",
-        "S-1",
-        "S-3",
-        "S-4",
-        "424B",
-        "SC 13D",
-        "SC 13G",
-        "ALL"
-      ]
+      "uniqueItems": true
     },
     "lookbackDays": {
       "title": "Lookback Period (Days)",
@@ -49,15 +27,13 @@
       "editor": "number",
       "default": 7,
       "minimum": 1,
-      "maximum": 90,
-      "unit": "days"
+      "maximum": 90
     },
     "enableChangeDetection": {
       "title": "Enable Change Detection",
       "type": "boolean",
       "description": "Compare with previous filings to detect changes",
-      "default": true,
-      "editor": "checkbox"
+      "default": true
     },
     "changeThreshold": {
       "title": "Change Detection Threshold",
@@ -65,15 +41,13 @@
       "description": "Minimum percentage change to flag (0.05 = 5%)",
       "default": 0.05,
       "minimum": 0.01,
-      "maximum": 1.0,
-      "editor": "number"
+      "maximum": 1.0
     },
     "enableAiAnalysis": {
       "title": "Enable AI Analysis",
       "type": "boolean",
       "description": "Generate AI-powered summaries and insights (requires OpenAI API key)",
-      "default": false,
-      "editor": "checkbox"
+      "default": false
     },
     "openaiApiKey": {
       "title": "OpenAI API Key",
@@ -90,20 +64,17 @@
       "pattern": "^https?://.*"
     },
     "webhookHeaders": {
-      "title": "Webhook Headers",
+      "title": "Webhook Headers (JSON)",
       "type": "object",
-      "description": "Custom HTTP headers for webhook (JSON format)",
+      "description": "Custom HTTP headers for webhook requests as JSON object",
       "editor": "json",
-      "prefill": {
-        "Authorization": "Bearer YOUR_TOKEN_HERE"
-      }
+      "prefill": {}
     },
     "includeFullText": {
       "title": "Include Full Filing Text",
       "type": "boolean",
-      "description": "Include complete filing text in output (large)",
-      "default": false,
-      "editor": "checkbox"
+      "description": "Include complete filing text in output (warning: large)",
+      "default": false
     },
     "maxConcurrency": {
       "title": "Max Concurrency",
@@ -111,24 +82,19 @@
       "description": "Maximum concurrent requests to SEC",
       "default": 5,
       "minimum": 1,
-      "maximum": 10,
-      "editor": "number"
+      "maximum": 10
     },
     "proxyConfiguration": {
       "title": "Proxy Configuration",
       "type": "object",
-      "description": "Apify proxy configuration",
-      "editor": "proxy",
-      "prefill": {
-        "useApifyProxy": true
-      }
+      "description": "Apify proxy settings",
+      "editor": "proxy"
     },
     "debugMode": {
       "title": "Debug Mode",
       "type": "boolean",
       "description": "Enable verbose logging for debugging",
-      "default": false,
-      "editor": "checkbox"
+      "default": false
     }
   },
   "required": ["watchlist"]
