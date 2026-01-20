@@ -1,0 +1,46 @@
+{
+  "name": "sec-edgar-filing-scraper",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AI-Agent-Ready SEC/EDGAR regulatory filings change detection scraper",
+  "main": "main.js",
+  "author": "Your Team",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "apify": "^3.1.0",
+    "crawlee": "^3.7.0",
+    "cheerio": "^1.0.0-rc.12",
+    "axios": "^1.6.0",
+    "openai": "^4.20.0",
+    "difflib": "^0.2.4"
+  },
+  "devDependencies": {
+    "@apify/eslint-config-ts": "^0.3.0",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/sec-edgar-scraper"
+  },
+  "keywords": [
+    "apify",
+    "sec",
+    "edgar",
+    "filings",
+    "10-k",
+    "10-q",
+    "8-k",
+    "change-detection",
+    "ai-agent",
+    "financial-data",
+    "regulatory",
+    "scraper",
+    "hedge-fund",
+    "investment"
+  ]
+}

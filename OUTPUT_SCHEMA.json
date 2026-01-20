@@ -1,0 +1,294 @@
+{
+  "title": "SEC/EDGAR Filing Change Detector - Output Schema",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "scrapedAt": {
+      "title": "Scraped Timestamp",
+      "type": "string",
+      "description": "ISO 8601 timestamp when data was scraped",
+      "format": "date-time"
+    },
+    "company": {
+      "title": "Company Information",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Official company name"
+        },
+        "ticker": {
+          "type": "string",
+          "description": "Stock ticker symbol"
+        },
+        "cik": {
+          "type": "string",
+          "description": "SEC Central Index Key (10 digits)"
+        },
+        "sic": {
+          "type": "string",
+          "description": "Standard Industrial Classification code"
+        },
+        "industry": {
+          "type": "string",
+          "description": "Industry description"
+        },
+        "fiscalYearEnd": {
+          "type": "string",
+          "description": "Fiscal year end (MMDD format)"
+        }
+      }
+    },
+    "filing": {
+      "title": "Filing Details",
+      "type": "object",
+      "properties": {
+        "accessionNumber": {
+          "type": "string",
+          "description": "SEC accession number"
+        },
+        "type": {
+          "type": "string",
+          "description": "Filing type (10-K, 10-Q, 8-K, etc.)"
+        },
+        "filingDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Date filed with SEC"
+        },
+        "reportDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Period end date"
+        },
+        "acceptanceDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When SEC accepted the filing"
+        },
+        "isAmendment": {
+          "type": "boolean",
+          "description": "Whether this is an amended filing"
+        },
+        "fiscalYear": {
+          "type": "integer",
+          "description": "Fiscal year"
+        },
+        "fiscalPeriod": {
+          "type": "string",
+          "description": "Fiscal period (Q1, Q2, Q3, Q4, FY)"
+        }
+      }
+    },
+    "urls": {
+      "title": "Filing URLs",
+      "type": "object",
+      "properties": {
+        "edgarFiling": {
+          "type": "string",
+          "format": "uri",
+          "description": "SEC EDGAR filing page URL"
+        },
+        "primaryDocument": {
+          "type": "string",
+          "format": "uri",
+          "description": "Primary document URL"
+        },
+        "htmlViewer": {
+          "type": "string",
+          "format": "uri",
+          "description": "SEC HTML viewer URL"
+        },
+        "xbrlData": {
+          "type": "string",
+          "format": "uri",
+          "description": "XBRL data package URL"
+        }
+      }
+    },
+    "changeDetection": {
+      "title": "Change Detection Results",
+      "type": "object",
+      "properties": {
+        "hasChanges": {
+          "type": "boolean",
+          "description": "Whether changes were detected vs previous filing"
+        },
+        "changeScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Overall magnitude of changes (0-1)"
+        },
+        "changeSeverity": {
+          "type": "string",
+          "enum": ["minor", "moderate", "significant", "critical"],
+          "description": "Change severity classification"
+        },
+        "comparedTo": {
+          "type": "object",
+          "description": "Previous filing used for comparison",
+          "properties": {
+            "accessionNumber": {"type": "string"},
+            "filingDate": {"type": "string", "format": "date"},
+            "type": {"type": "string"}
+          }
+        },
+        "sections": {
+          "type": "array",
+          "description": "Changes by section",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sectionName": {"type": "string"},
+              "changeType": {
+                "type": "string",
+                "enum": ["added", "removed", "modified", "unchanged"]
+              },
+              "changePercentage": {"type": "number"},
+              "wordCountDelta": {"type": "integer"},
+              "summary": {"type": "string"}
+            }
+          }
+        },
+        "keyChanges": {
+          "type": "array",
+          "description": "Top 10 most significant changes",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": {"type": "string"},
+              "description": {"type": "string"},
+              "impact": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "aiAnalysis": {
+      "title": "AI-Generated Analysis",
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Natural language summary of filing and changes"
+        },
+        "keyTakeaways": {
+          "type": "array",
+          "description": "Bullet-point key insights",
+          "items": {"type": "string"}
+        },
+        "sentiment": {
+          "type": "object",
+          "properties": {
+            "overall": {
+              "type": "string",
+              "enum": ["very_positive", "positive", "neutral", "negative", "very_negative"]
+            },
+            "score": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1,
+              "description": "Sentiment score (-1 to 1)"
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "riskScore": {
+          "type": "object",
+          "properties": {
+            "overall": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "AI-calculated risk score (0-100)"
+            },
+            "category": {
+              "type": "string",
+              "enum": ["low", "moderate", "high", "critical"]
+            },
+            "factors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "factor": {"type": "string"},
+                  "weight": {"type": "number"},
+                  "description": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "entities": {
+          "type": "object",
+          "description": "Named entities extracted",
+          "properties": {
+            "people": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "role": {"type": "string"}
+                }
+              }
+            },
+            "companies": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "products": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        },
+        "topics": {
+          "type": "array",
+          "description": "Key topics identified",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topic": {"type": "string"},
+              "relevance": {"type": "number"}
+            }
+          }
+        }
+      }
+    },
+    "excerpts": {
+      "title": "Filing Excerpts",
+      "type": "object",
+      "properties": {
+        "businessDescription": {"type": "string"},
+        "riskFactors": {"type": "string"},
+        "mdAndA": {"type": "string"},
+        "legalProceedings": {"type": "string"}
+      }
+    },
+    "fullText": {
+      "title": "Full Filing Text",
+      "type": "string",
+      "description": "Complete text of filing (if includeFullText=true)"
+    },
+    "metadata": {
+      "title": "Scraper Metadata",
+      "type": "object",
+      "properties": {
+        "actorRunId": {"type": "string"},
+        "datasetId": {"type": "string"},
+        "processingTimeMs": {"type": "integer"},
+        "retryCount": {"type": "integer"}
+      }
+    }
+  },
+  "required": ["scrapedAt", "company", "filing", "urls"]
+}
